@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [main, dev]
 
-env:
-  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-  SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
