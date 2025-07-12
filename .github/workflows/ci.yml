@@ -6,34 +6,37 @@ on:
   pull_request:
     branches: [main, dev]
 
+env:
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: ⬇️ Checkout code
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+        
+      - name: ⬇️ Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          
       - name: ⚙️ Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'pnpm'
-
-      - name: ⬇️ Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
+          
       - name: 📦 Install dependencies
         run: pnpm install
-
+        
       - name: 🧪 Type check
         run: pnpm exec tsc --noEmit
-
+        
       - name: 🛠 Build app
         run: pnpm build
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-
