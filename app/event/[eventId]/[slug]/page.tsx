@@ -1,5 +1,5 @@
 // app/event/[eventId]/[slug]/page.tsx
-import styles from 'event.module.scss'
+import styles from '../event.module.scss'
 export const dynamic = 'force-dynamic';
 import { supabase } from '@/lib/supabase';
 import { getEventMetadata, formatEventDateRange } from '@/utils/format';
