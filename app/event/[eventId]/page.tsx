@@ -1,11 +1,17 @@
 // app/event/[eventId]/page.tsx
+import styles from 'event.module.scss';
 export const dynamic = 'force-dynamic';
 import { supabase } from '@/lib/supabase';
+import { formatEventDateRange, getEventMetadata } from '@/utils/format';
 import { notFound } from 'next/navigation'; 
 
 type Props = {
   params: Promise<{ eventId: string }>;
 };
+
+export async function generateMetadata({ params }: Props ) {
+  return getEventMetadata((await params).eventId);
+}
 
 export default async function EventPage({ params }: Props) {
   const { eventId: event_id } = await params;
@@ -22,19 +28,23 @@ export default async function EventPage({ params }: Props) {
     return notFound();
   }
   return (
-    <main>
-      <div>
-      <h1>{event_data.title}</h1>
-      {event_data.event_date && <p>{event_data.event_date}</p>}
-      </div>
-      <h2>{event_data.subtitle}</h2>
-      <p>{event_data.description}</p>
-      {subevent_data.map((subevent: any, i: number) => (
-        <p key={i}>
-          <a href={`/event/${event_data.id}/${subevent.subevent_index}`}>{subevent.title}</a>
+    <main className={styles.main}>
+      <div className={styles.header}>
+        <h1>{event_data.title}</h1>
+        <p className={styles.date}>
+          {formatEventDateRange(event_data.event_start, event_data.event_end)}
         </p>
+      </div>
+      <h2 className={styles.subtitle}>{event_data.subtitle}</h2>
+      <p className={styles.description}>{event_data.description}</p>
+      <div className={styles.subeventList}>
+      {subevent_data.map((subevent: any, i: number) => (
+          <a key={i}
+          href={`/event/${event_data.id}/${subevent.subevent_index}`}>
+            {subevent.title}
+          </a>
         ))}
+      </div>
     </main>
-    // should be a array, is actually an object according to js
   );
 }

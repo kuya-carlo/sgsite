@@ -1,0 +1,50 @@
+.main {
+  padding: 2rem;
+  max-width: 960px;
+  margin: auto;
+}
+
+.header {
+  text-align: center;
+
+  h1 {
+    font-size: 2.5rem;
+    color: #1e90ff;
+  }
+
+  .date {
+    margin-top: 0.25rem;
+    color: #aaa;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    margin-top: 1rem;
+  }
+}
+
+.description {
+  margin: 2rem 0;
+  line-height: 1.6;
+  color: #ccc;
+}
+
+.subeventList {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.subeventLink {
+  background: #333;
+  padding: 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #f0f0f0;
+  border: 1px solid #444;
+
+  &:hover {
+    background: #1e90ff33;
+    border-color: #1e90ff;
+  }
+}

@@ -43,8 +43,19 @@ styles/
 Create `.env.local` with your Supabase credentials:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_public_anon_key
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your_public_anon_key
+```
+
+Generate icons
+
+```sh
+mkdir -p public/icons
+convert logo.png -define icon:auto-resize=64,48,32,16 public/favicon.ico
+convert logo.png -resize 192x192 public/icons/icon-192.png
+convert logo.png -resize 512x512 public/icons/icon-512.png
+convert logo.png -resize 1200x630^ -gravity center -extent 1200x630 public/og-image.png
+convert logo.png -resize 256x64 public/logo-wide.png
 ```
 
 ---
