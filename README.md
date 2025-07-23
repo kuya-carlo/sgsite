@@ -1,4 +1,4 @@
-# SGSite 🚀  
+# SGSite 🚀
 
 Event microsite powered by Next.js (App Router), SCSS, and Supabase.
 
@@ -28,13 +28,13 @@ app/
       ├─ page.tsx            # Main event landing page
       ├─ layout.tsx          # Shared layout per event (optional)
       └─ [slug]/             # Subpages (e.g. 01, primer)
-         ├─ page.tsx         
+         ├─ page.tsx
 components/                  # Reusable UI components (WIP)
 lib/
 └─ supabase.ts               # Supabase client setup
 styles/
 └─ global.scss               # App-wide styles
-````
+```
 
 ---
 
@@ -100,7 +100,7 @@ Note: `fs`, `process.cwd()`, and other Node APIs are not allowed. Use edge-safe 
 - Pages that use Supabase must include:
 
   ```ts
-  export const dynamic = 'force-dynamic';
+  export const dynamic = "force-dynamic";
   ```
 
 - Avoid using `params` as a `Promise` — treat it as a plain object in production builds.
