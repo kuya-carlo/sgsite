@@ -1,5 +1,7 @@
 # SGSite 🚀  
 
+![CI Status](https://github.com/kaoru/mini/raw/main/.github/badges/ci-status.svg)
+
 Event microsite powered by Next.js (App Router), SCSS, and Supabase.
 
 This project powers event pages like `/event/devkit`, with structured sections like primers (`/event/devkit/01`) and resource links (`/event/devkit/01/assets`)(WIP). Content is managed dynamically via Supabase for easier updates and scalability.
