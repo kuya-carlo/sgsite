@@ -128,4 +128,4 @@ Note: `fs`, `process.cwd()`, and other Node APIs are not allowed. Use edge-safe 
 
 ---
 
-Built with 💻 and ☕ by \[you].
+Built with 💻 and ☕ by kuya-carlo.
