@@ -37,3 +37,27 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Ensure badge directory exists
+        run: mkdir -p .github/badges
+
+      - name: Generate CI status badge
+        uses: emibcn/badge-action@v2.0.2
+        if: always()
+        with:
+          label: 'CI'
+          status: ${{ job.status }}
+          color: '4c1,red'
+          path: '.github/badges/ci-status.svg'
+
+      - name: Commit badge
+        if: always()
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/badges/ci-status.svg
+          git commit -m "Update CI status badge" || echo "No changes to commit"
+          git push
