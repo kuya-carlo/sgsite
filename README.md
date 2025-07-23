@@ -1,5 +1,7 @@
 # SGSite 🚀
 
+![CI Status](https://raw.githubusercontent.com/kuya-carlo/sgsite/refs/heads/main/.github/badges/ci-status.svg?token=GHSAT0AAAAAADHHR5YFXXEPU7CFDS43DW642EBLE4A)
+
 Event microsite powered by Next.js (App Router), SCSS, and Supabase.
 
 This project powers event pages like `/event/devkit`, with structured sections like primers (`/event/devkit/01`) and resource links (`/event/devkit/01/assets`)(WIP). Content is managed dynamically via Supabase for easier updates and scalability.
@@ -126,4 +128,4 @@ Note: `fs`, `process.cwd()`, and other Node APIs are not allowed. Use edge-safe 
 
 ---
 
-Built with 💻 and ☕ by \[you].
+Built with 💻 and ☕ by kuya-carlo.
