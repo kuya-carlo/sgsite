@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 // Fallback to NEXT_PUBLIC_* in case SUPABASE_* is undefined
 const supabaseUrl = process.env.SUPABASE_URL!;

@@ -1,7 +1,7 @@
 // app/event/[eventId]/[slug]/page.tsx
-'use client';
-import { useRouter } from 'next/navigation';
-export const dynamic = 'force-dynamic';
+"use client";
+import { useRouter } from "next/navigation";
+export const dynamic = "force-dynamic";
 
 export default function NotFound() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export default function NotFound() {
             if (window.history.length > 1) {
               router.back();
             } else {
-              router.push('/events');
+              router.push("/events");
             }
           }}
         >
