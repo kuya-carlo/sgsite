@@ -57,3 +57,5 @@ prompt.txt
 # Optional: if you have other config files you don't want to commit
 # .env.example (keep this one usually)
 # README.md (keep this one usually)
+# for act
+.secrets
