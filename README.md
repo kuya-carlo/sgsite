@@ -1,6 +1,6 @@
 # SGSite 🚀  
 
-![CI Status](https://github.com/kaoru/mini/raw/main/.github/badges/ci-status.svg)
+![CI Status](https://raw.githubusercontent.com/kuya-carlo/sgsite/refs/heads/main/.github/badges/ci-status.svg?token=GHSAT0AAAAAADHHR5YFXXEPU7CFDS43DW642EBLE4A)
 
 Event microsite powered by Next.js (App Router), SCSS, and Supabase.
 
