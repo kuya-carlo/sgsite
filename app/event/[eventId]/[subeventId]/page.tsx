@@ -1,4 +1,4 @@
-// app/event/[eventId]/page.tsx
+// app/event/[eventId]/[subeventId] page.tsx
 import styles from './event.module.scss';
 export const dynamic = 'force-dynamic';
 import { supabase } from '@/lib/supabase';
@@ -6,11 +6,12 @@ import { formatEventDateRange, getEventMetadata } from '@/utils/format';
 import { notFound } from 'next/navigation'; 
 
 type Props = {
-  params: Promise<{ eventId: string }>;
+  params: Promise<{ eventId: string, subeventId: string }>;
 };
 
 export async function generateMetadata({ params }: Props ) {
-  return getEventMetadata((await params).eventId);
+  const {eventId, subeventId} = await params;
+  return getEventMetadata(eventId, subeventId);
 }
 
 export default async function EventPage({ params }: Props) {
@@ -23,19 +24,13 @@ export default async function EventPage({ params }: Props) {
   const { data: subevent_data, error: subevent_errors } = await supabase
     .from('testsubevent').select('*')
     .eq('event_id', event_id);
-  const { data } = await supabase
-    .storage.from('event-pics')
-    .getPublicUrl(event_id + '.svg');
   
   if (!event_data) {
     return notFound();
   }
   return (
-    <main>
+    <main >
       <header>
-        {data.publicUrl && (
-          <img src={data.publicUrl} alt={event_data.title} />
-        )}
         <h1>{event_data.title}</h1>
         <p className="date">
           {formatEventDateRange(event_data.event_start, event_data.event_end)}
