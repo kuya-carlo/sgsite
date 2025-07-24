@@ -7,6 +7,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "lint": "pnpm exec eslint . && pnpm exec prettier --check . && pnpm exec stylelint \"**/*.scss\"",
     "test": "echo \"No tests specified. Exiting.\""
   },
   "keywords": [],
@@ -21,9 +22,24 @@
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.31.0",
     "@types/node": "^24.0.13",
     "@types/react": "^19.1.8",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "eslint": "^9.31.0",
+    "eslint-plugin-react": "^7.37.5",
+    "prettier": "^3.6.2",
     "sass": "^1.89.2",
+    "stylelint": "^16.22.0",
+    "stylelint-config-standard-scss": "^15.0.1",
     "typescript": "^5.8.3"
-  }
+  },
+  "type": "module",
+  "eslintIgnore": [
+    "node_modules/",
+    ".next/",
+    "dist/",
+    "out/"
+  ]
 }

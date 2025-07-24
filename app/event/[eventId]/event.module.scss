@@ -29,13 +29,13 @@
   color: #ccc;
 }
 
-.subeventList {
+.subevent-list {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
-.subeventLink {
+.subevent-link {
   background: #333;
   padding: 1rem;
   border-radius: 8px;

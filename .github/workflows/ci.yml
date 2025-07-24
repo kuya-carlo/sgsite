@@ -11,50 +11,60 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: main
+
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          
+
       - name: ⬇️ Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
-          
+
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'pnpm'
-          
+          node-version: "18"
+          cache: "pnpm"
+
       - name: 📦 Install dependencies
         run: pnpm install
-        
+
+      - name: Lint code (ESLint)
+        run: pnpm exec eslint .
+
+      - name: Check formatting (Prettier)
+        run: pnpm exec prettier --check .
+
+      - name: Lint styles (Stylelint)
+        run: pnpm exec stylelint "**/*.scss"
+
       - name: 🧪 Type check
         run: pnpm exec tsc --noEmit
-        
+
       - name: 🛠 Build app
         run: pnpm build
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          
+
       - name: Run tests
         run: pnpm test
-        
+
       - name: Ensure badge directory exists
         run: mkdir -p .github/badges
-        
+
       - name: Generate CI status badge
         uses: emibcn/badge-action@v2.0.2
         if: always()
         with:
-          label: 'CI'
+          label: "CI"
           status: ${{ job.status }}
-          color: 'brightgreen,red'
-          path: '.github/badges/ci-status.svg'
-          
+          color: "brightgreen,red"
+          path: ".github/badges/ci-status.svg"
+
       - name: Commit badge
         if: always() && github.event_name == 'push' && contains(fromJSON('["main"]'), github.ref_name)
         run: |
