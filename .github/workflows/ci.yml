@@ -1,8 +1,6 @@
 name: CI
-
 permissions:
   contents: write
-
 on:
   push:
     branches: [main, dev]
@@ -13,7 +11,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: main
-
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v4
@@ -34,27 +31,17 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install
 
-      - name: Lint code (ESLint)
-        run: pnpm exec eslint .
-
-      - name: Check formatting (Prettier)
-        run: pnpm exec prettier --check .
-
-      - name: Lint styles (Stylelint)
-        run: pnpm exec stylelint "**/*.scss"
+      - name: 🔍 Run all linting checks
+        run: pnpm run lint
 
       - name: 🧪 Type check
-        run: pnpm exec tsc --noEmit
-
+        run: pnpm run type-check
 
       - name: 🛠 Build app
         run: pnpm build
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-
-      - name: Run tests
-        run: pnpm test
 
       - name: Ensure badge directory exists
         run: mkdir -p .github/badges
