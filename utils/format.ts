@@ -55,8 +55,6 @@ export function formatEventDateRange(
   start?: string | null,
   end?: string | null,
 ): string {
-  if (!start) return "TBA";
-
   // Converts Supabase "YYYY-MM-DD HH:MM:SS+00" to ISO
   const toDate = (s?: string | null) => {
     if (!s) return null;

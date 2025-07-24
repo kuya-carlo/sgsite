@@ -1,19 +1,21 @@
-// app/event/[eventId]/page.tsx
+// app/event/[eventId]/[subeventId] page.tsx
 export const dynamic = "force-dynamic";
 import { supabase } from "@/lib/supabase";
 import { formatEventDateRange, getEventMetadata } from "@/utils/format";
 import { notFound } from "next/navigation";
 
 type Props = {
-  params: Promise<{ eventId: string }>;
+  params: Promise<{ eventId: string; subeventId: string }>;
 };
 
 export async function generateMetadata({ params }: Props) {
-  return getEventMetadata((await params).eventId);
+  const { eventId, subeventId } = await params;
+  return getEventMetadata(eventId, subeventId);
 }
 
 export default async function EventPage({ params }: Props) {
   const { eventId: event_id } = await params;
+
   const { data: event_data, error: event_errors } = await supabase
     .from("testevent")
     .select("*")
@@ -24,16 +26,12 @@ export default async function EventPage({ params }: Props) {
     .select("*")
     .eq("event_id", event_id);
   console.log(event_errors, subevent_errors);
-  const { data } = await supabase.storage
-    .from("event-pics")
-    .getPublicUrl(event_id + ".svg");
   if (!event_data) {
     return notFound();
   }
   return (
     <main>
       <header>
-        {data.publicUrl && <img src={data.publicUrl} alt={event_data.title} />}
         <h1>{event_data.title}</h1>
         <p className="date">
           {formatEventDateRange(event_data.event_start, event_data.event_end)}
@@ -45,6 +43,7 @@ export default async function EventPage({ params }: Props) {
         {subevent_data.map((subevent: any, i: number) => (
           <a
             key={i}
+            className="subevent-link"
             href={`/event/${event_data.id}/${subevent.subevent_index}`}
           >
             {subevent.title}

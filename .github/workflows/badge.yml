@@ -1,0 +1,66 @@
+name: Generate badge
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: main
+    steps:
+      - name: ⬇️ Checkout code (GitHub Actions)
+        if: "!env.ACT"
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: ⬇️ Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "pnpm"
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🔍 Run all linting checks
+        run: pnpm run lint
+
+      - name: 🧪 Type check
+        run: pnpm run type-check
+
+      - name: 🛠 Build app
+        run: pnpm build
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
+      - name: Ensure badge directory exists
+        run: mkdir -p .github/badges
+
+      - name: Generate CI status badge
+        uses: emibcn/badge-action@v2.0.2
+        with:
+          label: "CI"
+          status: ${{ job.status }}
+          color: "brightgreen,red"
+          path: ".github/badges/ci-status.svg"
+
+      - name: Commit badge
+        if: "!env.ACT"
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/badges/ci-status.svg
+          git commit -m "Update CI status badge" || echo "No changes to commit"
+          git push origin HEAD:${{ github.ref_name }}
+          git push origin HEAD:${{ github.ref_name }}
