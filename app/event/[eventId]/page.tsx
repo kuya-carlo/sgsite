@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { formatEventDateRange, getEventMetadata } from '@/utils/format';
 import { notFound } from 'next/navigation'; 
 
+
 type Props = {
   params: Promise<{ eventId: string }>;
 };
@@ -13,20 +14,18 @@ export async function generateMetadata({ params }: Props ) {
   return getEventMetadata((await params).eventId);
 }
 
-export default async function EventPage({ params }: Props) {
+export default async function EventPage({ params }: Props ) {
   const { eventId: event_id } = await params;
-  
   const { data: event_data, error: event_errors } = await supabase
-    .from('testevent')
-    .select('*')
-    .eq('id', event_id).single();
+    .from("testevent")
+    .select("*")
+    .eq("id", event_id)
+    .single();
   const { data: subevent_data, error: subevent_errors } = await supabase
-    .from('testsubevent').select('*')
-    .eq('event_id', event_id);
-  const { data } = await supabase
-    .storage.from('event-pics')
-    .getPublicUrl(event_id + '.svg');
-  
+    .from("testsubevent")
+    .select("*")
+    .eq("event_id", event_id);
+  console.log(event_errors, subevent_errors);
   if (!event_data) {
     return notFound();
   }
