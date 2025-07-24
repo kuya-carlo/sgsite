@@ -17,7 +17,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          
 
       - name: ⬇️ Setup pnpm
         uses: pnpm/action-setup@v4
@@ -50,22 +49,22 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          
+
       - name: Run tests
         run: pnpm test
-        
+
       - name: Ensure badge directory exists
         run: mkdir -p .github/badges
-        
+
       - name: Generate CI status badge
         uses: emibcn/badge-action@v2.0.2
         if: always()
         with:
-          label: 'CI'
+          label: "CI"
           status: ${{ job.status }}
-          color: 'brightgreen,red'
-          path: '.github/badges/ci-status.svg'
-          
+          color: "brightgreen,red"
+          path: ".github/badges/ci-status.svg"
+
       - name: Commit badge
         if: always() && github.event_name == 'push' && contains(fromJSON('["main"]'), github.ref_name)
         run: |
