@@ -35,7 +35,12 @@ export default [
         ecmaVersion: "latest",
         sourceType: "module",
         jsx: true,
+        project: './tsconfig.json',
       },
+      extends: [
+        'next/core-web-vitals', // This is standard for Next.js projects
+        'plugin:@typescript-eslint/recommended', // Includes general TypeScript recommendations
+      ],
       globals: {
         window: true,
         document: true,
