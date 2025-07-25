@@ -19,7 +19,8 @@ export default async function EventPage({ params }: Props) {
   const { eventId: event_id } = await params;
   const { data: rawevent, error: event_errors } = await getEventData(event_id);
   const event_data: EventRecord | null = rawevent as EventRecord | null;
-  const { data: rawsubevent, error: subevent_errors } = await getSubeventData(event_id);
+  const { data: rawsubevent, error: subevent_errors } =
+    await getSubeventData(event_id);
   const subevent_data: SubeventRecord[] | null = rawsubevent as
     | SubeventRecord[]
     | null;

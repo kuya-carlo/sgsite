@@ -1,5 +1,5 @@
 // app/event/[eventId]/[subeventId] page.tsx
-export const dynamic = "force-dynamic";;
+export const dynamic = "force-dynamic";
 import { getSubeventData } from "@/lib/data";
 import { SubeventRecord } from "@/types/data";
 import { formatEventDateRange, getEventMetadata } from "@/utils/format";
@@ -18,7 +18,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function EventPage({ params }: Props) {
   const { eventId: event_id, subeventId: subevent_id } = await params;
-  const { data: rawsubevent, error: subevent_errors } = await getSubeventData(event_id, parseInt(subevent_id, 10));
+  const { data: rawsubevent, error: subevent_errors } = await getSubeventData(
+    event_id,
+    parseInt(subevent_id, 10),
+  );
   const subevent_data: SubeventRecord | null =
     rawsubevent as SubeventRecord | null;
 
