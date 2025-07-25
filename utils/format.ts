@@ -1,53 +1,61 @@
-import { supabase } from "@/lib/supabase";
+import { remoteLookup } from "@/lib/data";
+import { eventDBName, subeventDBName } from "@/lib/env";
+import { EventRecord, SubeventRecord } from "@/types/data";
+import { MetadataRecord } from "@/types/metadata";
 
-export async function getEventMetadata(eventId: string, slug?: string) {
+// lib/data.ts
+// Ensure remoteLookup, EventRecord, SubeventRecord, MetadataRecord are correctly imported/defined
+
+export async function getEventMetadata(
+  eventId: string,
+  slug?: string,
+): Promise<MetadataRecord> {
   if (slug) {
-    const { data: subevent } = await supabase
-      .from("testsubevent")
-      .select("title, description")
-      .eq("event_id", eventId)
-      .eq("subevent_index", slug)
-      .single();
+    const { data, error } = await remoteLookup<SubeventRecord>(subeventDBName, {
+      filters: [
+        { column: "event_id", value: eventId },
+        { column: "subevent_index", value: slug },
+      ],
+      isSingle: true,
+    });
 
-    return {
-      title: subevent?.title ?? "Subevent | Seekers Guild",
-      description:
-        subevent?.description ??
-        "Explore this subevent under Seekers Guild and its partners!",
-      icons: {
-        icon: "/favicon.ico",
-      },
-      openGraph: {
-        title: subevent?.title ?? "Subevent | Seekers Guild",
-        description: subevent?.description ?? "",
-        images: ["/og-image.png"], // ← fallback
-        // images: subevent?.og_image_url
-        //   ? [subevent.og_image_url]
-        //   : ['/og-image.png'], // ← fallback
-      },
-    };
+    if (error) {
+      console.error("Error fetching subevent metadata:", error);
+      return new MetadataRecord(
+        "Error | Seekers Guild",
+        "Could not retrieve subevent details. Please try again later.",
+      );
+    }
+
+    const subevent: SubeventRecord | null = data as SubeventRecord | null;
+
+    const title = subevent?.title || "Subevent Not Found | Seekers Guild";
+    const description =
+      subevent?.description || "Details for this subevent are not available.";
+
+    return new MetadataRecord(title, description);
   } else {
-    const { data: event } = await supabase
-      .from("testevent")
-      .select("title, description")
-      .eq("id", eventId)
-      .single();
+    const { data, error } = await remoteLookup<EventRecord>(eventDBName, {
+      field: "id",
+      id: eventId,
+      isSingle: true,
+    });
 
-    return {
-      title: event?.title ?? "Event | Seekers Guild",
-      description: event?.description ?? "Join the Seekers Guild event.",
-      icons: {
-        icon: "/favicon.ico",
-      },
-      openGraph: {
-        title: event?.title ?? "Event | Seekers Guild",
-        description: event?.description ?? "",
-        images: ["/og-image.png"], // ← fallback
-        // images: event?.og_image_url
-        //   ? [event.og_image_url]
-        //   : ['/og-image.png'],
-      },
-    };
+    if (error) {
+      console.error("Error fetching event metadata:", error);
+      return new MetadataRecord(
+        "Error | Seekers Guild",
+        "Could not retrieve event details. Please try again later.",
+      );
+    }
+
+    const event: EventRecord | null = data as EventRecord | null;
+
+    const title = event?.title || "Event Not Found | Seekers Guild";
+    const description =
+      event?.description || "Details for this event are not available.";
+
+    return new MetadataRecord(title, description);
   }
 }
 
