@@ -35,7 +35,6 @@ export default [
         ecmaVersion: "latest",
         sourceType: "module",
         jsx: true,
-        project: './tsconfig.json',
       },
       globals: {
         window: true,
