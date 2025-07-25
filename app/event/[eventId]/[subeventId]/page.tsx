@@ -1,55 +1,46 @@
 // app/event/[eventId]/[subeventId] page.tsx
 export const dynamic = "force-dynamic";
-import { supabase } from "@/lib/supabase";
+import { getSubeventData } from "@/lib/data";
+import { SubeventRecord } from "@/types/data";
 import { formatEventDateRange, getEventMetadata } from "@/utils/format";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{ eventId: string; subeventId: string }>;
 };
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { eventId, subeventId } = await params;
-  return getEventMetadata(eventId, subeventId);
+  const metadataRecord = await getEventMetadata(eventId, subeventId);
+  return metadataRecord.toNextMetadata();
 }
 
 export default async function EventPage({ params }: Props) {
-  const { eventId: event_id } = await params;
+  const { eventId: event_id, subeventId: subevent_id } = await params;
+  const { data: rawsubevent, error: subevent_errors } = await getSubeventData(
+    event_id,
+    parseInt(subevent_id, 10),
+  );
+  const subevent_data: SubeventRecord | null =
+    rawsubevent as SubeventRecord | null;
 
-  const { data: event_data, error: event_errors } = await supabase
-    .from("testevent")
-    .select("*")
-    .eq("id", event_id)
-    .single();
-  const { data: subevent_data, error: subevent_errors } = await supabase
-    .from("testsubevent")
-    .select("*")
-    .eq("event_id", event_id);
-  console.log(event_errors, subevent_errors);
-  if (!event_data) {
+  console.log(subevent_errors);
+  if (!subevent_data) {
     return notFound();
   }
   return (
     <main>
       <header>
-        <h1>{event_data.title}</h1>
+        <h1>{subevent_data.title}</h1>
         <p className="date">
-          {formatEventDateRange(event_data.event_start, event_data.event_end)}
+          {formatEventDateRange(
+            subevent_data.event_start,
+            subevent_data.event_end,
+          )}
         </p>
       </header>
-      <h2 className="subtitle">{event_data.subtitle}</h2>
-      <p className="description">{event_data.description}</p>
-      <div className="subevent-list">
-        {subevent_data.map((subevent: any, i: number) => (
-          <a
-            key={i}
-            className="subevent-link"
-            href={`/event/${event_data.id}/${subevent.subevent_index}`}
-          >
-            {subevent.title}
-          </a>
-        ))}
-      </div>
+      <p className="description">{subevent_data.description}</p>
     </main>
   );
 }

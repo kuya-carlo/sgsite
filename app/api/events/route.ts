@@ -1,42 +1,59 @@
 // app/api/events
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { remoteLookup } from "@/lib/data";
+import { EventRecord } from "@/types/data";
+import { eventDBName } from "@/lib/env";
 
-export async function GET() {
-  const { data, error } = await supabase.from("testevent").select("*").limit(5);
-  console.log("Events: ", data);
-  if (error) {
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const limit = parseInt(searchParams.get("limit") || "5", 10);
+  const offset = parseInt(searchParams.get("offset") || "0", 10);
+  if (isNaN(limit) || limit < 0) {
     return NextResponse.json(
       {
         result: "error",
         errors: [
           {
-            status: error.code,
-            title: error.message,
-            detail: error.details,
-            context: error.hint,
+            status: 400,
+            title: "Bad Request",
+            detail: "Invalid 'limit' parameter. Must be a non-negative number.",
+            context: null,
           },
         ],
       },
-      // {error: 'Failed to fetch events', details: error.message}
+      { status: 400 },
     );
   }
-  if (!data || data.length === 0) {
-    return NextResponse.json({
-      result: "error",
-      errors: [
-        {
-          status: 404,
-          title: "Event not found",
-          detail: "No entry found in the database",
-          context: null,
-        },
-      ],
-    });
+  if (isNaN(offset) || offset < 0) {
+    return NextResponse.json(
+      {
+        result: "error",
+        errors: [
+          {
+            status: 400,
+            title: "Bad Request",
+            detail:
+              "Invalid 'offset' parameter. Must be a non-negative number.",
+            context: null,
+          },
+        ],
+      },
+      { status: 400 },
+    );
   }
+
+  const { data, error } = await remoteLookup<EventRecord>(eventDBName, {
+    limit: limit,
+    offset: offset,
+  });
+  console.log(error);
+
+  const event_data: EventRecord[] | null = data as EventRecord[] | null;
+  // console.log("Events: ", data);
+  console.log(error);
   return NextResponse.json({
     result: "ok",
-    response: data.length === 1 ? "entry" : "collection",
-    data: data,
+    response: event_data.length === 1 ? "entry" : "collection",
+    data: event_data,
   });
 }
