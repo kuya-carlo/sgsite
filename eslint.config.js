@@ -53,7 +53,7 @@ export default [
     },
     rules: {
       ...nextCompatConfig.rules,
-      "react/react-in-jsx-scope": "off", // ✅ Fix for Next.js
+      "react/react-in-jsx-scope": "off",
     },
     settings: {
       ...nextCompatConfig.settings,
